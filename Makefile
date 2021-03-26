@@ -24,10 +24,12 @@ try-terraform-bootstrap:
 
 do-terraform-bootstrap:
 	cd terraform/bootstrap && \
-	terraform init && \
-	terraform apply
+	terraform apply -auto-approve \
+		-var bucket_name=$BUCKET_NAME \
+		-var environment=$ENVIRONMENT
 
 undo-terraform-bootstrap:
 	cd terraform/bootstrap && \
-	terraform init && \
-	terraform destroy
+	terraform destroy -auto-approve \
+		-var bucket_name=$BUCKET_NAME \
+		-var environment=$ENVIRONMENT
