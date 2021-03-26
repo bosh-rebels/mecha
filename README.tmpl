@@ -1,0 +1,10 @@
+{{ $w := (datasource "config") -}}
+# {{ $w.name}}
+
+{{$w.description}}
+
+## Introduction
+{{$w.introduction}}
+
+## Usage
+{{$w.usage}}
