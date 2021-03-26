@@ -1,0 +1,56 @@
+---
+resource_types:
+  - name: terraform
+    type: docker-image
+    source:
+      repository: ljfranklin/terraform-resource
+      tag: latest
+
+resources:
+  - name: repo
+    type: git
+    source:
+      uri: https://github.com/bosh-rebels/mecha.git
+      branch: main
+  - name: terraform
+    type: terraform
+    source:
+      env_name: ((env_name))
+      backend_type: s3
+      backend_config:
+        bucket: ((bucket_name))
+        key: ((bucket_key))
+        region: ((bucket_region))
+        access_key: ((bucket_access_key))
+        secret_key: ((bucket_secret_key))
+      vars:
+        region: ((bucket_region))
+      env:
+        AWS_ACCESS_KEY_ID: ((terraform_access_key))
+        AWS_SECRET_ACCESS_KEY: ((terraform_secret_key))
+
+jobs:
+  - name: run-genesis
+    plan:
+    - get: repo
+      trigger: true
+    - put: terraform
+      params:
+        env_name: ((env_name))
+        terraform_source: repo/terraform/genesis
+    - task: show-outputs
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: ubuntu
+        inputs:
+          - name: terraform
+        run:
+          path: /bin/sh
+          args:
+            - -c
+            - |
+                echo "name: $(cat terraform/name)"
+                echo "metadata: $(cat terraform/metadata)"

@@ -1,0 +1,4 @@
+bucket_name: genesis-project
+bucket_key: tf-state/terraform.tfstate
+env_name: build
+bucket_region: eu-west-1
