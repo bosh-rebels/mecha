@@ -16,3 +16,18 @@ ifeq ($(UNAME), Linux)
 	chmod +x /usr/local/bin/gomplate
 endif
 endif
+
+try-terraform-bootstrap:
+	cd terraform/bootstrap && \
+	terraform init && \
+	terraform plan
+
+do-terraform-bootstrap:
+	cd terraform/bootstrap && \
+	terraform init && \
+	terraform apply
+
+undo-terraform-bootstrap:
+	cd terraform/bootstrap && \
+	terraform init && \
+	terraform destroy
