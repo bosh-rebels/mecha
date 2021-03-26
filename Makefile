@@ -17,19 +17,25 @@ ifeq ($(UNAME), Linux)
 endif
 endif
 
-try-terraform-bootstrap:
+terraform:
+terraform/try-bootstrap:
 	cd terraform/bootstrap && \
 	terraform init && \
-	terraform plan
+	terraform plan \
+		-var bucket_name=$(BUCKET_NAME) \
+		-var environment=$(ENVIRONMENT) \
+		-var region=$(AWS_DEFAULT_REGION)
 
-do-terraform-bootstrap:
+terraform/do-bootstrap:
 	cd terraform/bootstrap && \
 	terraform apply -auto-approve \
-		-var bucket_name=$BUCKET_NAME \
-		-var environment=$ENVIRONMENT
+		-var bucket_name=$(BUCKET_NAME) \
+		-var environment=$(ENVIRONMENT) \
+		-var region=$(AWS_DEFAULT_REGION)
 
-undo-terraform-bootstrap:
+terraform/undo-bootstrap:
 	cd terraform/bootstrap && \
 	terraform destroy -auto-approve \
-		-var bucket_name=$BUCKET_NAME \
-		-var environment=$ENVIRONMENT
+		-var bucket_name=$(BUCKET_NAME) \
+		-var environment=$(ENVIRONMENT) \
+		-var region=$(AWS_DEFAULT_REGION)
