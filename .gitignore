@@ -1,1 +1,10 @@
 /.envrc
+.idea
+.terraform
+.backup
+*.zip
+.DS_Store
+*.tfstate
+*.tfstate.*
+.terraform.*
+**/.terraform/*
