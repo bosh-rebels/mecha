@@ -1,4 +1,5 @@
 resource "aws_vpc" "vpc" {
+  count                = local.vpc_count
   cidr_block           = var.vpc_cidr
   instance_tenancy     = "default"
   enable_dns_hostnames = true
@@ -10,7 +11,7 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = local.vpc_id
 }
 
 resource "aws_eip" "jumpbox_eip" {
@@ -40,7 +41,7 @@ resource "aws_eip" "nat_eip" {
 }
 
 resource "aws_subnet" "bosh_subnet" {
-  vpc_id     = aws_vpc.vpc.id
+  vpc_id     = local.vpc_id
   cidr_block = cidrsubnet(var.vpc_cidr, 8, 0)
 
   tags = {
@@ -50,7 +51,7 @@ resource "aws_subnet" "bosh_subnet" {
 }
 
 resource "aws_route_table" "bosh_route_table" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = local.vpc_id
 }
 
 resource "aws_route" "bosh_route_table" {
@@ -66,7 +67,7 @@ resource "aws_route_table_association" "route_bosh_subnets" {
 
 resource "aws_subnet" "internal_subnets" {
   count             = length(var.availability_zones)
-  vpc_id            = aws_vpc.vpc.id
+  vpc_id            = local.vpc_id
   cidr_block        = cidrsubnet(var.vpc_cidr, 4, count.index + 1)
   availability_zone = element(var.availability_zones, count.index)
 
@@ -76,12 +77,12 @@ resource "aws_subnet" "internal_subnets" {
   }
 
   lifecycle {
-    ignore_changes = ["cidr_block", "availability_zone"]
+    ignore_changes = [cidr_block, availability_zone]
   }
 }
 
 resource "aws_route_table" "nated_route_table" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = local.vpc_id
 
   route {
     cidr_block     = "0.0.0.0/0"
@@ -96,10 +97,10 @@ resource "aws_route_table_association" "route_internal_subnets" {
 }
 
 resource "aws_flow_log" "vpc_flow_log" {
-  iam_role_arn    = aws_iam_role.flow_logs.arn
+  iam_role_arn    = aws_iam_role.flow_logs_role.arn
   log_destination = aws_cloudwatch_log_group.vpc_flog_log_cw_group.arn
   traffic_type    = "REJECT"
-  vpc_id          = aws_vpc.vpc.id
+  vpc_id          = local.vpc_id
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flog_log_cw_group" {

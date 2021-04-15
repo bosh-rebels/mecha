@@ -6,7 +6,7 @@
 resource "aws_security_group" "nat_security_group" {
   name        = join("-", [var.env, "nat-security-group"])
   description = "NAT"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = local.vpc_id
 
   tags = {
     Name       = join("-", [var.env, "nat-security-group"])
@@ -14,7 +14,7 @@ resource "aws_security_group" "nat_security_group" {
   }
 
   lifecycle {
-    ignore_changes = ["name"]
+    ignore_changes = [name]
   }
 }
 
@@ -62,7 +62,7 @@ resource "aws_security_group_rule" "nat_udp_rule" {
 resource "aws_security_group" "internal_security_group" {
   name        = join("-", [var.env, "internal-security-group"])
   description = "Internal"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = local.vpc_id
 
   tags = {
     Name       = join("-", [var.env, "internal-security-group"])
@@ -70,7 +70,7 @@ resource "aws_security_group" "internal_security_group" {
   }
 
   lifecycle {
-    ignore_changes = ["name"]
+    ignore_changes = [name]
   }
 }
 
@@ -141,7 +141,7 @@ resource "aws_security_group_rule" "bosh_internal_security_rule_udp" {
 resource "aws_security_group" "bosh_security_group" {
   name        = join("-", [var.env, "bosh-security-group"])
   description = "BOSH Director"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = local.vpc_id
 
   tags = {
     Name       = join("-", [var.env, "bosh-security-group"])
@@ -149,7 +149,7 @@ resource "aws_security_group" "bosh_security_group" {
   }
 
   lifecycle {
-    ignore_changes = ["name", "description"]
+    ignore_changes = [name, description]
   }
 }
 
@@ -229,7 +229,7 @@ resource "aws_security_group_rule" "bosh_security_group_rule_allow_internet" {
 resource "aws_security_group" "jumpbox" {
   name        = join("-", [var.env, "jumpbox-security-group"])
   description = "Jumpbox"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = local.vpc_id
 
   tags = {
     Name       = join("-", [var.env, "jumpbox-security-group"])
@@ -237,7 +237,7 @@ resource "aws_security_group" "jumpbox" {
   }
 
   lifecycle {
-    ignore_changes = ["name", "description"]
+    ignore_changes = [name, description]
   }
 }
 

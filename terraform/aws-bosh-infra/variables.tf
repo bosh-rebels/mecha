@@ -16,6 +16,12 @@ variable "env" {
   default = "genesis"
 }
 
+variable "existing_vpc_id" {
+  description = "Provide existing VPC id ready to go"
+  type        = string
+  default     = ""
+}
+
 variable "vpc_cidr" {
   type    = string
   default = "10.0.0.0/16"

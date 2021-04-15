@@ -52,7 +52,7 @@ output "bosh_subnet_availability_zone" {
 }
 
 output "vpc_id" {
-  value = aws_vpc.vpc.id
+  value = local.vpc_id
 }
 
 output "region" {
@@ -92,5 +92,5 @@ output "director__internal_ip" {
 }
 
 output "iam_instance_profile" {
-  value = local.iamProfileProvided ? join("", data.aws_iam_instance_profile.bosh.*.name) : join("", aws_iam_instance_profile.bosh.*.name)
+  value = local.iamProfileProvided ? join("", data.aws_iam_instance_profile.bosh.*.name) : join("", aws_iam_instance_profile.bosh_iam_instance_profile.*.name)
 }
