@@ -92,5 +92,5 @@ output "director__internal_ip" {
 }
 
 output "iam_instance_profile" {
-  value = local.iamProfileProvided ? join("", data.aws_iam_instance_profile.bosh.*.name) : join("", aws_iam_instance_profile.bosh_iam_instance_profile.*.name)
+  value = local.iamProfileProvided == 1 ? join("", data.aws_iam_instance_profile.bosh.*.name) : join("", aws_iam_instance_profile.bosh_iam_instance_profile.*.name)
 }
